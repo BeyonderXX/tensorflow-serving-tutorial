@@ -626,10 +626,11 @@ public class FastTextTFSClient {
         for (Integer intDatum : intData) {
             tensorProtoBuilder.addIntVal(intDatum);
         }
-				// build input TensorProto shape
+        // build input TensorProto shape
         TensorShapeProto.Builder tensorShapeBuilder = TensorShapeProto.newBuilder();
-tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(1));
-tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(seqLen));    tensorProtoBuilder.setTensorShape(tensorShapeBuilder.build());
+      tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(1));
+      tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(seqLen));
+      tensorProtoBuilder.setTensorShape(tensorShapeBuilder.build());
       
         TensorProto tp = tensorProtoBuilder.build();
         builder.putInputs("input_x", tp);
