@@ -40,16 +40,15 @@ builder = tf.saved_model.builder.SavedModelBuilder("out_dir")
 # define signature which specify input and out nodes
 predict_sig_def = (saved_model.signature_def_utils.build_signature_def(
 inputs={"input_x":saved_model.build_tensor_info(fast_model.input_x)},
-outputs={
-"out_y": saved_model.build_tensor_info(fast_model.y_pred_cls),
-"score": saved_model.build_tensor_info(fast_model.logits)},
- method_name=saved_model.signature_constants.PREDICT_METHOD_NAME))
+outputs={"out_y": saved_model.build_tensor_info(fast_model.y_pred_cls),
+         "score": saved_model.build_tensor_info(fast_model.logits)},
+         method_name=saved_model.signature_constants.PREDICT_METHOD_NAME))
 
 # add graph and variables
 builder.add_meta_graph_and_variables(sess, ["serve"],
-      signature_def_map={"fastText_sig_def": predict_sig_def},
-      main_op=tf.compat.v1.tables_initializer(),
-      strip_default_attrs=True)
+                                     signature_def_map={"fastText_sig_def": predict_sig_def},
+                                     main_op=tf.compat.v1.tables_initializer(),
+                                     strip_default_attrs=True)
 builder.save()
 ```
 
@@ -114,7 +113,7 @@ saved_model_cli show --dir model_dir_path --all
 
 Tensorflow提供了一个Java API（本质上是Java封装了C++的动态库）, 允许在Java可以很方便的加载SavedModel, 并调用模型推理。
 
-####***2.1.1 添加依赖***
+#### ***2.1.1 添加依赖***
 
 首先，在maven的pom.xml中添加依赖，此处tensorflow的版本最好与python训练版本一致。
 
@@ -126,7 +125,7 @@ Tensorflow提供了一个Java API（本质上是Java封装了C++的动态库）,
 </dependency>
 ```
 
-####***2.1.2 Load & Predict***
+#### ***2.1.2 Load & Predict***
 
 然后，加载模型，调用模型在线预测。以fast text模型为例，代码如下：
 
@@ -236,7 +235,7 @@ Tensorflow Serving 内部的工作流如下图所示。
 > 3. 解决Client依赖
 > 4. Client代码编写
 
-####***2.2.1 环境搭建***
+#### ***2.2.1 环境搭建***
 
 [参考链接](https://tensorflow.google.cn/tfx/serving/docker)
 
@@ -293,7 +292,7 @@ docker run -p 8500:8500 -p 8501:8501 --mount type=bind,source=/tmp/multi_models/
 
 这里给出我的 model.config 内容示例：
 
-```json
+```
 model_config_list:{
   config:{
     name:"textCnn",
@@ -341,7 +340,7 @@ model_config_list:{
 
 本文着重介绍 ***gRPC***的调用方法， Tensorflow Serving 的 ***gRPC API*** 在 protobuf 文件中定义，一般需要将其编译成相应的 Client 源码，再集成至应用。
 
-###***3.1 解决依赖***
+### ***3.1 解决依赖***
 
 若使用 Python 作为 Client ,  安装对应包即可：
 
@@ -526,7 +525,7 @@ protoc --grpc-java_out $PROJECT_ROOT/src/main/java --java_out $PROJECT_ROOT/src/
 
 分别给出 Python 和 Java Client 的简单示例。
 
-#### ***2.2.4.1 Python client***
+#### ***3.2.1 Python client***
 
 ```python
 from __future__ import print_function
@@ -571,7 +570,7 @@ def main():  
 
 ```
 
-#### ***2.2.4.2 Java Client***
+#### ***3.2.2 Java Client***
 
 ```java
 package client;
@@ -661,7 +660,7 @@ tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(seqLen));   
 
 此外，还针对单线程和多线程请求作了对比测试。
 
-####***4.2.1 测试环境***
+#### ***4.2.1 测试环境***
 
 测试机器使用的是mbp-2019，Docker 资源配置：
 
@@ -670,7 +669,7 @@ tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(seqLen));   
 | **Memory** | **2 GB 2133MHz LPDDR3**              |
 | **Swap**   | **1 GB**                             |
 
-####***4.2.2 测试结果***
+#### ***4.2.2测试结果***
 
 在输入文本长度固定为 50 时，分别验证单线程和多线程性能，结果如下表。
 
