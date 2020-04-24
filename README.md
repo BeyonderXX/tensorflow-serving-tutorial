@@ -1,10 +1,8 @@
 #  Tensorflow 模型线上部署
 
-[toc]
-
 由于python的灵活性和完备的生态库，使得其成为实现、验证ML算法的不二之选。但是工业界要将模型部署到生产环境上，需要考略性能问题，就不建议再使用python端的服务。这个从训练到部署的整个流程如下图所示：
 
-![image-20200422101258837](/Users/wangxiao/Library/Application Support/typora-user-images/image-20200422101258837.png)
+![procedure](./image/procedure.png)
 
 基本可以把工作分为三块：
 
@@ -14,13 +12,15 @@
 
 本文采用  **Saver (python) + Serving (tensorflow serving) + Client (Java)**  作为解决方案，从零开始记录线上模型部署流程。 
 
+
+
 ## ***1、Saver***
 
 部署模型第一步是将训练好的整个模型导出为一系列标准格式的文件，然后即可在不同的平台上部署模型文件。TensorFlow 使用 SavedModel（pb文件） 这一格式用于模型部署。与Checkpoint 不同，SavedModel 包含了一个 TensorFlow 程序的完整信息： 不仅包含参数的权值，还包含计算图。
 
 SavedModel最终保存结果包含两部分saved_model.pb和variables文件夹。
 
-![image-20200422091739930](/Users/wangxiao/Library/Application Support/typora-user-images/image-20200422091739930.png)
+![savedModel](./image/savedModel.png)
 
 此处分别介绍，Tensorflow 1.0 和 2.0两个版本的导出方法。
 
@@ -100,7 +100,9 @@ tf.saved_model.save(model, "保存的目标文件夹名称")
 saved_model_cli show --dir model_dir_path --all
 ```
 
-![image-20200423163627798](/Users/wangxiao/Library/Application Support/typora-user-images/image-20200423163627798.png)
+![checkSavedModel](./image/checkSavedModel.png)
+
+
 
 ## ***2、Serving***
 
@@ -218,7 +220,7 @@ Tensorflow Serving 丰富的、开箱即用的功能，使得其成为业内认�
 
 Tensorflow Serving 内部的工作流如下图所示。
 
-![image-20200422103149382](/Users/wangxiao/Library/Application Support/typora-user-images/image-20200422103149382.png)
+![tfs_procedure](./image/tfs_procedure.png)
 
 简单的说：
 
@@ -294,31 +296,31 @@ docker run -p 8500:8500 -p 8501:8501 --mount type=bind,source=/tmp/multi_models/
 ```json
 model_config_list:{
   config:{
-   name:"textCnn",
-   base_path:"/models/multi_models/textCnn/pb",
-   model_platform:"tensorflow",
-   model_version_policy {
-    specific {
-     	versions: 0
+    name:"textCnn",
+    base_path:"/models/multi_models/textCnn/pb",
+    model_platform:"tensorflow",
+    model_version_policy {
+      specific {
+        versions: 0
+      }
     }
-   }
   },
 
   config:{
-   name:"rcnn",
-   base_path:"/models/multi_models/rcnn/pb",
-   model_platform:"tensorflow",
-   model_version_policy {
-    specific {
-    	versions: 0
+    name:"rcnn",
+    base_path:"/models/multi_models/rcnn/pb",
+    model_platform:"tensorflow",
+    model_version_policy {
+      specific {
+        versions: 0
+      }
     }
-   }
   },
 
   config:{
-   name:"bert",
-   base_path:"/models/multi_models/bert/pb",
-   model_platform:"tensorflow",
+    name:"bert",
+    base_path:"/models/multi_models/bert/pb",
+    model_platform:"tensorflow",
   }
 }
 ```
@@ -330,6 +332,8 @@ model_config_list:{
 #### ***2.2.3 更多功能***
 
 以上是Tensorflow Serving 基本功能的介绍，其他功能诸如：自定义API、与Kubernetes的结合等操作，请见 [参考链接](https://www.tensorflow.org/tfx/serving/serving_kubernetes)。
+
+
 
 ## ***3、Client***
 
@@ -638,6 +642,8 @@ tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(seqLen));   
 }
 ```
 
+
+
 ## ***4、Test***
 
 ### ***4.1 一致性测试***
@@ -659,7 +665,7 @@ tensorShapeBuilder.addDim(TensorShapeProto.Dim.newBuilder().setSize(seqLen));   
 
 测试机器使用的是mbp-2019，Docker 资源配置：
 
-| Cpu        | **Intel Core i5 - 2.4 GHz - 4 core** |
+| **Cpu**    | **Intel Core i5 - 2.4 GHz - 4 core** |
 | ---------- | ------------------------------------ |
 | **Memory** | **2 GB 2133MHz LPDDR3**              |
 | **Swap**   | **1 GB**                             |
