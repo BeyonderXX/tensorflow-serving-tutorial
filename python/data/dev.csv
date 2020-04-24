@@ -1,0 +1,10 @@
+sentence,intent
+买num/股/个stock,买入股票
+帮我买num/股stock,买入股票
+买numstock,买入股票
+抄底stock,买入股票
+打板stock,买入股票
+做多stock,买入股票
+满仓stock,买入股票
+加（仓）100stock,买入股票
+重仓stock,买入股票
