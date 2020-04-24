@@ -495,8 +495,8 @@ $ ls -l build/exe/java_plugin/protoc-gen-grpc-java
 
 ```shell
 export SRC=~/code/TFS_source/
-export PROJECT_ROOT=~/Desktop/pingan/code/model-load/java/NluEngine/
-cd $PROJECT_ROOT/src/main/proto/
+export PROJECT_ROOT=~/java/JavaClient/
+cd $PROJECT_ROOT/src/main/proto/s
 protoc --java_out $PROJECT_ROOT/src/main/java --proto_path ./ ./tensorflow/core/example/*.proto
 # append by wangxiao
 protoc --java_out $PROJECT_ROOT/src/main/java --proto_path ./ ./tensorflow_serving/core/logging.proto
