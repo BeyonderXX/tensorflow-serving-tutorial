@@ -437,7 +437,7 @@ $ brew install protobuf
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-<!--                    <useArgumentFile>true</useArgumentFile>-->
+                    <!--<useArgumentFile>true</useArgumentFile>-->
                 </configuration>
             </plugin>
             <plugin>
