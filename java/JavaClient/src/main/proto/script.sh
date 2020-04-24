@@ -1,5 +1,5 @@
 export SRC=~/code/TFS_source/
-export PROJECT_ROOT=~/Desktop/pingan/code/javaLibModel-load/java/NluEngine/
+export PROJECT_ROOT=~/java/JavaClient/
 cd $PROJECT_ROOT/src/main/proto/
 protoc --java_out $PROJECT_ROOT/src/main/java --proto_path ./ ./tensorflow/core/example/*.proto
 # append by wangxiao
